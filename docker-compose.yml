@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mut-house-hunter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mut_house_hunter_app
+    ports:
+      - "80:8080"
+    restart: always
+    environment:
+      - NODE_ENV=production
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
